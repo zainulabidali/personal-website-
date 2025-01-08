@@ -265,3 +265,37 @@ const options3 = {
 };
 
 const typed3 = new Typed("#typed-output-3", options3);
+
+document.querySelector('.php-email-form').addEventListener('submit', function (e) {
+  e.preventDefault(); // Prevent default form submission
+  const form = this;
+  const loading = form.querySelector('.loading');
+  const errorMessage = form.querySelector('.error-message');
+  const sentMessage = form.querySelector('.sent-message');
+
+  // Show the loading message
+  loading.style.display = 'block';
+  errorMessage.style.display = 'none';
+  sentMessage.style.display = 'none';
+
+  // Send form data
+  fetch(form.action, {
+    method: 'POST',
+    body: new FormData(form),
+  })
+    .then(response => {
+      loading.style.display = 'none';
+      if (response.ok) {
+        sentMessage.style.display = 'block';
+        form.reset(); // Reset form fields after successful submission
+      } else {
+        errorMessage.style.display = 'block';
+        errorMessage.textContent = 'Something went wrong. Please try again.';
+      }
+    })
+    .catch(() => {
+      loading.style.display = 'none';
+      errorMessage.style.display = 'block';
+      errorMessage.textContent = 'There was a problem submitting your form.';
+    });
+});
